@@ -2,10 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
-Route::get('/', function () {
-    return view('home');
-})->middleware('auth');
+use App\Http\Controllers\CuitController;
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
@@ -15,5 +12,8 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [CuitController::class, 'index'])->name('home');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/post', [CuitController::class, 'post'])->name('post');
+});
